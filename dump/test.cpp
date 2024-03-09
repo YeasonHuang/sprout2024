@@ -55,7 +55,9 @@ double eps = 1e-12;
    
   
 void solve(){ 
-    
+    tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> tr;
+    tr.insert(4),tr.insert(10),tr.insert(5);
+    cout << *tr.find_by_order(-1);
 } 
 int main() 
 { 
