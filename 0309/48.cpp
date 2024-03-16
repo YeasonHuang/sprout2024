@@ -52,35 +52,57 @@ double eps = 1e-12;
 #define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define all(x) (x).begin(), (x).end()
 #define sz(x) ((ll)(x).size())
-
-int n;
-struct Node {
-    Node *left;
-    Node *right;
-    int val;
+struct binary_tree {
+    int data;
+    binary_tree* left;//binary_tree* left= nullptr;
+    binary_tree* right;//binary_tree* right= nullptr;
 };
-
-Node* BinaryTree(int* preorder, int* inorder, int length) {
-    if(length == 0) return NULL;
-    Node *node = new Node;
-    node->val = *preorder;
-    
-    int root_index = 0;
-    for(;root_index < length; ++root_index) {
-        if(inorder[root_index]==*preorder) break;
+void preorder(binary_tree* top, int num) {
+    if(num > top->data){
+        if(top->right == nullptr) {
+            top->right = new binary_tree;
+            top->right->data = num;
+            top->right->left = nullptr;
+            top->right->right = nullptr;
+        }
+        else {
+            preorder(top->right, num);
+        }
     }
-    node->left = BinaryTree(preorder+1, inorder,root_index);
-    node->right = BinaryTree(preorder+root_index+1, inorder+root_index+1, length-root_index-1);
-    cout << node->val << '\n';
-    return node;
+    else if(num < top->data) {
+        if(top->left == nullptr) {
+            top->left = new binary_tree;
+            top->left->data = num;
+            top->left->left = nullptr;
+            top->left->right = nullptr;
+        }
+        else {
+            preorder(top->left, num);
+        }
+    }
 }
 
-signed main(){
-    fast_cin();
-    int arr[2005], sorted[2005];
-    while(cin >> arr[n]) {
-        sorted[n] = arr[n++];
+void lastorder(binary_tree* top){
+    if(top->left != nullptr) {
+        lastorder(top->left);
     }
-    sort(sorted, sorted+n);
-    BinaryTree(arr, sorted, n);
+    if(top->right != nullptr) {
+        lastorder(top->right);
+    }
+    cout << top->data << ln;
+}
+
+signed main() {
+    fast_cin();
+    int num, N;
+    binary_tree* tr = new binary_tree;
+    tr->left = nullptr;
+    tr->right = nullptr;
+
+    cin >> N >> num;
+    tr->data = num;
+    while(--N) cin >> num, preorder(tr, num);
+    lastorder(tr);
+
+    return 0;
 }

@@ -1,4 +1,4 @@
-#pragma GCC optimize("O3,Ofast")
+#pragma GCC optimize("Ofast")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
 #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>  
@@ -52,47 +52,23 @@ double eps = 1e-12;
 #define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define all(x) (x).begin(), (x).end()
 #define sz(x) ((ll)(x).size())
- 
 
-void solve(){
-    ll N, x;
-    string op;
-    tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> tr;
-    
-    cin >> N;
-    while(N--) {
-        cin >> op >> x;
-        if(op == "insert") {
-            tr.insert(x);
-        }
-        else if(op == "delete"){
-            tr.erase(tr.find(x));
-        }
-        else{
-            ll k = tr.order_of_key(x);
-            auto it = tr.find_by_order((k-1<0?0:k-1));
-            ll l = *it, r = *next(it);
-            //if(f) cout << '\n';
-            if(x - l == r - x) {
-                cout << l << ' ' << r;
-            }
-            else if(x - l > r - x) {
-                cout << r;
-            }
-            else {
-                cout << l;
-            }
-            cout << '\n';
-        }
-    }
+int visit[1505], N;
+void initialize(int n) {
+    N = n;
+    for(int i = 0; i < n; ++i) visit[i] = 0;
 }
-int main() {
-    fast_cin();
-    //ll t;
-    //cin >> t;
-    //for(int it=1;it<=t;it++) {
-     //cout << "Case #" << it+1 << ": ";
-        solve();
-    //}
-    return 0;
+void swap(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+int hasEdge(int a, int b) {
+    ++visit[a], ++visit[b];
+    if(a > b) swap(a, b);
+    if(visit[a] >= N-1 || visit[b] >= N-1) return 1;
+    else return 0;
+}
+
+signed main() {
 }
