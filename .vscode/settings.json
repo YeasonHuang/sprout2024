@@ -6,9 +6,11 @@
         "deque": "cpp",
         "string": "cpp",
         "vector": "cpp",
-        "rope": "cpp"
+        "rope": "cpp",
+        "set": "cpp"
     },
-    "editor.fontFamily": "'Fira Code'",
+    "editor.fontFamily": "'Source Code Pro'",
     "editor.fontLigatures": true,
-    "editor.fontWeight": "400",
+    "editor.fontWeight": "500",
+    "editor.parameterHints.enabled": true,
 }
