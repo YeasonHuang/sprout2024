@@ -107,4 +107,5 @@ int main(){
     sodoku1.scan_maze();
     //sodoku1.print("begin");
     sodoku1.solving();
+    //hehe
 }
