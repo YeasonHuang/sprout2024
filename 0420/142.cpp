@@ -36,7 +36,7 @@ typedef vector<vector<ll> > vv64;
 typedef vector<vector<p64> > vvp64;
 typedef vector<p64> vp64;
 typedef vector<p32> vp32;
-ll MOD = 1000007;
+ll MOD = 998244353;
 double eps = 1e-12;
 #define forn(i,e) for(ll i = 0; i < e; i++)
 #define forsn(i,s,e) for(ll i = s; i < e; i++)
@@ -52,37 +52,22 @@ double eps = 1e-12;
 #define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define all(x) (x).begin(), (x).end()
 #define sz(x) ((ll)(x).size())
- 
-int dp[100005][3][3];
-void build() {
-    memset(dp, 0, sizeof(dp));
-    dp[1][0][0] = dp[1][1][1] = dp[1][2][2] = 1;
-    for(int i = 2;i < 100005; ++i) {
-        dp[i][0][0] = (dp[i-1][0][0] + dp[i-1][0][1] + dp[i-1][0][2]) % MOD;
-        dp[i][0][1] = (dp[i-1][0][0] + dp[i-1][0][1]) % MOD;
-        dp[i][0][2] = (dp[i-1][0][0] + dp[i-1][0][2]) % MOD;
+  
 
-        dp[i][1][0] = (dp[i-1][1][0] + dp[i-1][1][1] + dp[i-1][1][2]) % MOD;
-        dp[i][1][1] = (dp[i-1][1][0] + dp[i-1][1][1]) % MOD;
-        dp[i][1][2] = (dp[i-1][1][0] + dp[i-1][1][2]) % MOD;
-
-        dp[i][2][0] = (dp[i-1][2][0] + dp[i-1][2][1] + dp[i-1][2][2]) % MOD;
-        dp[i][2][1] = (dp[i-1][2][0] + dp[i-1][2][1]) % MOD;
-        dp[i][2][2] = (dp[i-1][2][0] + dp[i-1][2][2]) % MOD;
-
-        //dp[i][0] = (dp[i-1][0] + dp[i-1][1] + dp[i-1][2]) % MOD;
-        //dp[i][1] = (dp[i-1][0] + dp[i-1][1]) % MOD;
-        //dp[i][2] = (dp[i-1][0] + dp[i-1][2]) % MOD;
-    }
-}
 void solve(){
-    int N;
-    cin >> N;
-    cout << (dp[N][0][0] + dp[N][0][1] + dp[N][0][2] + dp[N][1][0] + dp[N][1][1] + dp[N][2][0] + dp[N][2][2]) % MOD << ln;
+    ll n;
+    cin >> n;
+    ll arr[n], dp[n];
+    for(ll i = 0;i < n; ++i) cin >> arr[i];
+    for(ll i = 0;i < 2; ++i) dp[i] = arr[i];
+    dp[2] = arr[0] + arr[2];
+    for(ll i = 3;i < n; ++i) {
+        dp[i] = max(dp[i-2], dp[i-3]) + arr[i];
+    }
+    cout << max(dp[n-1], dp[n-2]) << ln;
 }
-int main() {
+signed main() {
     fast_cin();
-    build();
     ll t;
     cin >> t;
     for(int it=1;it<=t;it++) {
