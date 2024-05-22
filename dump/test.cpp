@@ -1,111 +1,15 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-class Sudoku{
-private:
-    int maze[9][9];
-    bool flag = false;
-public:
-    void print(string s);//
-    void scan_maze();//
-    vector<int> select(int, int);
-    int next_empty(int, int);
-    void solving();
-    void dfs(int row, int col );
-    
-};
-void Sudoku::print(string s){
-    cout<<endl<<"====="<<s<<"======"<<endl;
-    for (int i=0; i<9;i++){
-        cout<<"|";
-        for (int j=0;j<9;j++){
-            cout<<maze[i][j];
-            if(j%3==2)cout<<"|";
-        }
-        cout<<endl;
-        if(i%3==2)cout<<"-------------"<<endl;
-    }
-}
-vector<int> Sudoku::select(int r, int c){
-    bool box[9]={0};
-    for(int i=0;i<9;i++){
-        if(maze[i][c]>0)box[maze[i][c]-1] = 1;
-        if(maze[r][i]>0)box[maze[r][i]-1] = 1;
-    }
-    int row_start = 3*(r/3),col_start = 3*(c/3);
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            if(maze[row_start+i][col_start+j]>0)
-                box[maze[row_start+i][col_start+j]-1] = 1;
-        }
-    }
-    vector<int> ans;
-    for(int i=0;i<9;i++)
-        if(!box[i])ans.push_back(i+1);
-    return ans;
-}
-int Sudoku::next_empty(int row, int col){
-    int ind = col;
-    for(int i=row;i<9;i++){
-        while(ind<9){
-            if(maze[i][ind]==0){
-                int pos = i*9+ind;
-                return pos;
-            }
-            ind++;
-        }
-        ind = 0;
-    }
-    return -1;
-}
-void Sudoku::dfs(int row, int col ){
-    int pos = next_empty(row, col),nr,nc;
-    if(pos == -1){
-        flag = true;
+void dp(int a, int b, int c, int d) {
+    if(a == -1) dp(1, b, c, d), dp(0, b, c, d);
+    else if(b == -1) dp(a, 0, c, d), dp(a, 1, c, d);
+    else if(c == -1) dp(a, b, 0, d), dp(a, b, 1, d);
+    else if(d == -1) dp(a, b, c, 0), dp(a, b, c, 1);
+    else {
+        if((a || !d) && (!a || b) && (!b || c) && (!a || !b || !c) && (a || !c || d)) cout << a << ' ' << b << ' ' << c << ' ' << d << '\n';
         return;
     }
-    vector<int> candidate = select(row, col);
-    int len = candidate.size();
-    
-    for(int i=0;i<len;i++){
-        maze[row][col] = candidate[i];
-        pos = next_empty(row, col);
-        nr = pos/9; nc = pos%9;
-        dfs(nr, nc);
-        if(flag)return;
-    }
-    maze[row][col] = 0;
-}
-void Sudoku::scan_maze(){
-    for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            char temp;cin>>temp;
-            if(temp=='.')maze[i][j] = 0;
-            else maze[i][j] = temp -'0';
-        }
-    }
-}
-void Sudoku::solving(){
-    int first_empty = next_empty(0, 0),nr,nc;
-    nr = first_empty/9; nc = first_empty%9;
-    dfs(nr, nc);
-    bool f = false;
-    for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            vector<int> v = select(i,j);
-            if(v.size()>0)f = true;
-        }
-    }
-    if(!flag || f)cout<<"No solution."<<endl;
-    else{
-        print("solved");
-    }
-    flag = false;
 }
 int main(){
-    Sudoku sodoku1;
-    sodoku1.scan_maze();
-    //sodoku1.print("begin");
-    sodoku1.solving();
-    //hehe
+    dp(-1, -1, -1, -1);
 }
