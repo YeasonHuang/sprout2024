@@ -35,7 +35,6 @@ double eps = 1e-12;
 #define fast_cin() ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define all(x) (x).begin(), (x).end()
 #define sz(x) ((ll)(x).size())
-#define int long long int
 
 class SegmentTree {
 public:
@@ -45,18 +44,15 @@ public:
         build(nums, 1, 0, n - 1);
     }
 
-    void update(int index, int value) {
-        update(1, 0, n - 1, index, value);
+    void updateRange(int left, int right, int value) {
+        updateRange(1, 0, n - 1, left, right, value);
     }
 
     int query(int left, int right) {
-        return queryMin(1, 0, n - 1, left, right);
+        return queryCount(1, 0, n - 1, left, right);
     }
 
 private:
-    struct Node {
-        int value;
-    };
     std::vector<int> tree;
     int n;
 
@@ -67,62 +63,59 @@ private:
             int mid = (start + end) / 2;
             build(nums, 2 * node, start, mid);
             build(nums, 2 * node + 1, mid + 1, end);
-            tree[node] = min(tree[2 * node] , tree[2 * node + 1]);
+            tree[node] = tree[2 * node] + tree[2 * node + 1];
         }
     }
 
-    void update(int node, int start, int end, int index, int value) {
-        if (start == end) {
-            tree[node] = value;
-        } else {
-            int mid = (start + end) / 2;
-            if (index <= mid) {
-                update(2 * node, start, mid, index, value);
-            } else {
-                update(2 * node + 1, mid + 1, end, index, value);
-            }
-            tree[node] = min(tree[2 * node] , tree[2 * node + 1]);
-        }
-    }
-
-    int queryMin(int node, int start, int end, int left, int right) {
+    void updateRange(int node, int start, int end, int left, int right) {
         if (left > end || right < start) {
-            return INT_MAX;
+            return;
+        }
+        if (left <= start && right >= end) {
+            tree[node] += (end - start + 1);
+            return;
+        }
+        int mid = (start + end) / 2;
+        updateRange(2 * node, start, mid, left, right, value);
+        updateRange(2 * node + 1, mid + 1, end, left, right, value);
+        tree[node] = tree[2 * node] + tree[2 * node + 1];
+    }
+
+    int queryCount(int node, int start, int end, int left, int right) {
+        if (left > end || right < start) {
+            return 0;
         }
         if (left <= start && right >= end) {
             return tree[node];
         }
         int mid = (start + end) / 2;
-        int leftMin = queryMin(2 * node, start, mid, left, right);
-        int rightMin = queryMin(2 * node + 1, mid + 1, end, left, right);
-        return std::min(leftMin, rightMin);
+        int leftCount = queryCount(2 * node, start, mid, left, right);
+        int rightCount = queryCount(2 * node + 1, mid + 1, end, left, right);
+        return leftCount + rightCount;
     }
 };
 
-void solve(){
-    int N, Q, opp, l, r, x;
-    cin >> N >> Q;
+void solve() {
+    int N, M, A, B;
+    string op;
+    
+    cin >> N >> M;
+    vector<int> v(N, 1);
+    SegmentTree tr(v);
 
-    vector<S> v(N);
-    for(int i = 0, t;i < N; ++i) {
-        cin >> t;
-        v[i] = t;
-    }
+    while(M--) {
+        cin >> op >> A >> B;
+        if(op == "TURN") {
 
-    lazy_segtree<S, op, e, F, mapping, composition, id> tr(v);
-
-    while(Q--) {
-        cin >> opp >> l >> r, --l, --r;
-        if(opp == 1) {
-            cin >> x;
-            tr.apply(l, r, F{x});
         }
-        else {
-            cout << tr.prod(l, r) << ln;
+        else if(op == "RESET") {
+        
+        }
+        else if(op == "COUNT") {
+
         }
     }
 }
-
 signed main() {
     fast_cin();
     solve();
