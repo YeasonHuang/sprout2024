@@ -1,15 +1,47 @@
 #include <bits/stdc++.h>
 using namespace std;
-void dp(int a, int b, int c, int d) {
-    if(a == -1) dp(1, b, c, d), dp(0, b, c, d);
-    else if(b == -1) dp(a, 0, c, d), dp(a, 1, c, d);
-    else if(c == -1) dp(a, b, 0, d), dp(a, b, 1, d);
-    else if(d == -1) dp(a, b, c, 0), dp(a, b, c, 1);
-    else {
-        if((a || !d) && (!a || b) && (!b || c) && (!a || !b || !c) && (a || !c || d)) cout << a << ' ' << b << ' ' << c << ' ' << d << '\n';
+
+#define C 26
+
+map<int, vector<string>> mp[6];
+
+inline int pw(int x, int n) {
+    int res = 1;
+    while(n) {
+        if(n & 1) res *= x;
+        x *= x;
+        n >>= 1;
+    }
+    return res;
+}
+
+int H(string s) {
+    int n = s.size();
+    int curr = pw(C, n);
+    int temp = 0;
+    for(int i = 1;i <= n; ++i) {
+        temp += (s[i-1] - 'a') * pw(C, n-i);
+    }
+    return temp;
+}
+
+void dp(int x, string s, int n) {
+    if(x == 0) {
+        mp[n][H(s)].push_back(s);
+        if(mp[n][H(s)].size() > 3) {
+            for(auto i : mp[n][H(s)]) {
+                cout << i << " ";
+            }
+            cout << '\n';
+        }
         return;
+    }
+    for(int i = 0; i < C; ++i) {
+        dp(x-1, s + char('a' + i), n);
     }
 }
 int main(){
-    dp(-1, -1, -1, -1);
+    for(int i = 1;i <= 6; ++i) {
+        dp(i, "", i);
+    }
 }
