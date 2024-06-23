@@ -1,47 +1,31 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define C 26
-
-map<int, vector<string>> mp[6];
-
-inline int pw(int x, int n) {
-    int res = 1;
-    while(n) {
-        if(n & 1) res *= x;
-        x *= x;
-        n >>= 1;
-    }
-    return res;
-}
-
-int H(string s) {
-    int n = s.size();
-    int curr = pw(C, n);
-    int temp = 0;
-    for(int i = 1;i <= n; ++i) {
-        temp += (s[i-1] - 'a') * pw(C, n-i);
-    }
-    return temp;
-}
-
-void dp(int x, string s, int n) {
-    if(x == 0) {
-        mp[n][H(s)].push_back(s);
-        if(mp[n][H(s)].size() > 3) {
-            for(auto i : mp[n][H(s)]) {
-                cout << i << " ";
-            }
-            cout << '\n';
-        }
-        return;
-    }
-    for(int i = 0; i < C; ++i) {
-        dp(x-1, s + char('a' + i), n);
-    }
-}
 int main(){
-    for(int i = 1;i <= 6; ++i) {
-        dp(i, "", i);
+    int N; // number of coin types
+    cin >> N;
+    vector<int> C(N); // coin denominations
+    vector<int> K(N); // number of coins
+    for (int i = 0; i < N; i++) {
+        cin >> C[i] >> K[i];
+    }
+    int M; // target amount
+    cin >> M;
+
+    vector<int> dp(M + 1, INT_MAX); // dp[i] represents the minimum number of coins needed to make amount i
+    dp[0] = 0; // base case, it takes 0 coins to make amount 0
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j <= M; j++) {
+            if (dp[j] != INT_MAX && j + C[i] <= M && dp[j] + 1 <= K[i]) {
+                dp[j + C[i]] = min(dp[j + C[i]], dp[j] + 1);
+            }
+        }
+    }
+
+    if (dp[M] == INT_MAX) {
+        cout << "No" << endl;
+    } else {
+        cout << "Yes" << endl;
     }
 }
