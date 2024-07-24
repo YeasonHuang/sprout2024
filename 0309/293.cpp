@@ -63,11 +63,11 @@ struct Node{
 }node[100005];
 
 int dfs(int id){
-    visit[id] = true;
+    ::visit[id] = true;
     int len = Edge[id].size();
     for(int i=0;i<len;i++){
         int temp = Edge[id][i];
-        if(visit[temp]==1)continue;
+        if(::visit[temp]==1)continue;
         int t = dfs(temp);
         node[id].sum += t;
         node[id].maxn = max(node[id].maxn,t);
@@ -80,7 +80,7 @@ signed main(){
     cin>>t;
     while(t--){
         int n;cin>>n;
-        memset(visit, 0, sizeof(visit));
+        memset(::visit, 0, sizeof(::visit));
         
         for(int i=0;i<n;i++){
             Edge[i].clear();
